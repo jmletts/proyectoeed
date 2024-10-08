@@ -6,7 +6,8 @@ using namespace std;
 struct estudiante
 {
     string nombre;
-    
+    char genero;
+	
 };
 
 int main() {
