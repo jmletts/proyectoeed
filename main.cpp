@@ -1,7 +1,14 @@
+/*
+
+SISTEMA DE GESTIÓN DE HORARIOS PARA ALUMNOS DE ING DE SISTEMAS 
+
+*/
+
 #include <iostream>
 #include <iomanip>
 #include <string.h>
-#include <cstdlib>
+#include <chrono>  
+#include <thread> 
 
 using namespace std; 
 
@@ -15,6 +22,7 @@ struct horario{
 };
 
 const int MAX = 20;
+const int MAX2 = 50;
 
 //Arreglos globales
 horario lunes[MAX];
@@ -38,6 +46,8 @@ int count_domingo = 0;
 
 //Modulos 
 void displayError();
+void leerMensaje(char mensaje[]);
+void verificar_hora (int &hora_inicio, int &minuto_inicio, int &hora_final, int &minuto_final);
 int inicio();
 int seleccionar_semestre();
 void seleccionar_cursos(int n, int &opcion);
@@ -425,39 +435,8 @@ void seleccionar_horario(int opcion_curso, int opcion_semestre)
     cin >> dia_opcion;
   
     cout << " ↓↓↓ Ingrese a qué hora cursa " << semestre_curso[opcion_semestre][opcion_curso] << " el dia " << dias[dia_opcion-1]<<  " ↓↓↓ " << endl;
-    do
-    {
-        cout << "Hora de inicio (Formato 24h): "; cin >> hora_inicio;
-        if(hora_inicio<0 || hora_inicio>24){
-            displayError();
-        }
-    } while (hora_inicio<0 || hora_inicio>24);
     
-    do
-    {
-        cout << "Minutos de inicio: "; cin >>minuto_inicio;
-        if (minuto_inicio<0 || minuto_inicio>59) {
-            displayError();
-        }
-        
-    } while (minuto_inicio<0 || minuto_inicio>59);
-    
-
-    do
-    {
-        cout << "Hora de termino (Formato 24h): "; cin >> hora_final;
-        if(hora_final<0 || hora_final>24){
-        displayError();
-        }
-    } while (hora_final<0 || hora_final>24);;
-
-    do
-    {
-        cout << "Minutos de termino: "; cin >>minuto_final;
-        if (minuto_final<0 || minuto_final>59) {
-        displayError();
-        }
-    } while (minuto_final<0 || minuto_final>59);
+    verificar_hora(hora_inicio, minuto_inicio, hora_final, minuto_final);
 
     horario nuevo_horario = {semestre_curso[opcion_semestre][opcion_curso], hora_inicio, minuto_inicio, hora_final, minuto_final};
 
@@ -489,11 +468,7 @@ void seleccionar_examenes(int opcion_curso, int opcion_semestre){
           << "7. Domingo" << endl;
     cin >> dia_opcion;
 
-    cout << " ↓↓↓ Ingrese a qué hora tendrás examen de  " << semestre_curso[opcion_semestre][opcion_curso] << " el dia " << dias[dia_opcion-1]<<  " ↓↓↓ " << endl;
-    cout << "Hora de inicio (Formato 24h): "; cin >> hora_inicio;
-    cout << "Minutos de inicio: "; cin >>minuto_inicio;
-    cout << "Hora de termino (Formato 24h): "; cin >> hora_final;
-    cout << "Minutos de termino: "; cin >> minuto_final;
+    verificar_hora(hora_inicio, minuto_inicio, hora_final, minuto_final);
 
     horario nuevo_horario = {examanes_semestre_curso[opcion_semestre][opcion_curso], hora_inicio, minuto_inicio, hora_final, minuto_final};
 
@@ -513,11 +488,13 @@ void seleccionar_examenes(int opcion_curso, int opcion_semestre){
 
 void horas_extra()
 {
+
+    char actividad[MAX2];
     int dia_opcion;
     int hora_inicio, minuto_inicio, hora_final, minuto_final;
-    string actividad;
-    cout << "¿Qué tienes que hacer?: "; 
-    getline(cin, actividad);
+    cin.ignore(10000, '\n');  // Limpiar el salto de línea
+    cout << "¿Qué tienes que hacer?: " << endl;
+    leerMensaje(actividad);
     cout << " ↓↓↓ Selecciona el día en que harás → "  << actividad << " ← ↓↓↓" << endl;
      cout << "1. Lunes " << endl
           << "2. Martes" << endl
@@ -529,10 +506,8 @@ void horas_extra()
     cin >> dia_opcion;
     
     cout << " ↓↓↓ Ingrese a qué hora harás → " << actividad << " ← el diá " << dias[dia_opcion-1]<<  " ↓↓↓ " << endl;
-    cout << "Hora de inicio (Formato 24h): "; cin >> hora_inicio;
-    cout << "Minutos de inicio: "; cin >>minuto_inicio;
-    cout << "Hora de termino (Formato 24h): "; cin >> hora_final;
-    cout << "Minutos de termino: "; cin >> minuto_final;
+
+    verificar_hora(hora_inicio, minuto_inicio, hora_final, minuto_final);
 
      horario nuevo_horario = {actividad, hora_inicio, minuto_inicio, hora_final, minuto_final};
 
@@ -638,10 +613,10 @@ void ordenar_horarios(horario horarios[], int n) {
     }
 }
 
-// PLAN ESTUDIOS
 
 void getMetodoEstudio(){    
-int op;
+
+    int op;
 
     cout << "\n --- Ingrese el método de Estudio --- \n";
     cout << "\n [1.] Método Pomodoro \n";
@@ -651,16 +626,31 @@ int op;
 
     switch (op) {
         case 1: {
-            //Pomodoro
-            cout << "\nEjecutando el Método Pomodoro...\n";
-            system("powershell -command \"while ($true) {Start-Sleep -Seconds 1800; Write-Host 'Tiempo de Descanso - 10 Minutos'; Start-Sleep -Seconds 600; Write-Host '¡Hora de Estudiar otra vez!'}\"");
+            // Método Pomodoro
+            while (true) {
+                // Estudio durante 30 minutos
+                cout << "\n--- Iniciando 30 minutos de estudio ---\n";
+                for (int i = 30; i > 0; i--) {
+                    cout << "Tiempo restante para estudiar: " << i << " minutos." << endl;
+                    this_thread::sleep_for(chrono::minutes(1)); // Espera un minuto
+                }
+                cout << "\n¡Tiempo de estudio ha terminado! Es momento de descansar 10 minutos.\n";
+
+                // Descanso durante 10 minutos
+                for (int i = 10; i > 0; i--) {
+                    cout << "Tiempo restante para descansar: " << i << " minutos." << endl;
+                    this_thread::sleep_for(chrono::minutes(1)); // Espera un minuto
+                }
+                cout << "\n¡Descanso ha terminado! Regresando al estudio...\n";
+            }
             break;
         }
         case 2: {
-            //Feynman
+            // Método Feynman
             string concepto;
             cout << "\nIngrese el concepto que quiere aprender utilizando el método Feynman: ";
-            getline(cin, concepto); 
+            cin.ignore(); // Limpiar el buffer
+            getline(cin, concepto); // Leer el concepto
 
             cout << "\n** Método Feynman para aprender: " << concepto << " **\n";
             cout << "1. Explica el concepto con tus propias palabras.\n";
@@ -670,19 +660,62 @@ int op;
             break;
         }
         case 3: {
-            // etiquetas
+            // Método de etiquetas
             cout << "\nMétodo de estudio con etiquetas:\n";
             cout << "Puedes asignar etiquetas a tus tareas para organizarlas mejor. Ejemplo:\n";
             cout << "1. Importante\n";
             cout << "2. Urgente\n";
             cout << "3. A largo plazo\n";
-
+            // Aquí puedes agregar más funcionalidades para el método de etiquetas
             break;
         }
         default:
             cout << "\nOpción no válida, intenta de nuevo.\n";
-    
             break;
     }
+                  
+}
 
+void leerMensaje(char mensaje[])
+{
+    cin.getline(mensaje, MAX2);
+}
+
+void verificar_hora (int &hora_inicio, int &minuto_inicio, int &hora_final, int &minuto_final)
+{
+    do {
+        cout << "Hora de inicio (Formato 24h): ";  cin >> hora_inicio;
+        if (hora_inicio < 0 || hora_inicio > 23) {
+            displayError();
+        }
+    } while (hora_inicio < 0 || hora_inicio > 23);
+    
+    do {
+        cout << "Minutos de inicio: "; cin >> minuto_inicio;
+        if (minuto_inicio < 0 || minuto_inicio > 59) {
+            displayError();
+        }
+    } while (minuto_inicio < 0 || minuto_inicio > 59);
+    
+    do {
+        cout << "Hora de término (Formato 24h): "; cin >> hora_final;
+        if (hora_final < 0 || hora_final > 23) {
+            displayError();
+
+        } else if (hora_final < hora_inicio) {
+            displayError();
+            cout << "La hora de término no puede ser anterior a la hora de inicio." << endl;
+        }
+    } while (hora_final < 0 || hora_final > 23 || hora_final < hora_inicio);
+
+    do {
+        cout << "Minutos de término: ";  cin >> minuto_final;
+        if (minuto_final < 0 || minuto_final > 59) {
+            displayError();
+
+        } else if (hora_inicio == hora_final && minuto_final <= minuto_inicio) {
+            displayError();
+            cout << "Los minutos de término deben ser mayores que los minutos de inicio." << endl;
+        }
+    } while (minuto_final < 0 || minuto_final > 59 || (hora_inicio == hora_final && minuto_final <= minuto_inicio));
 }
