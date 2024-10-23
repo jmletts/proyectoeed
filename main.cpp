@@ -618,60 +618,75 @@ void getMetodoEstudio(){
 
     int op;
 
-    cout << "\n --- Ingrese el método de Estudio --- \n";
-    cout << "\n [1.] Método Pomodoro \n";
-    cout << "\n [2.] Método Feynman \n";
-    cout << "\n [3.] Método etiquetas \n";
-    cin >> op;
+    while (true) { // Bucle que permite volver al menú después de cada opción
+        cout << "\n --- Ingrese el método de Estudio --- \n";
+        cout << "\n [1.] Método Pomodoro \n";
+        cout << "\n [2.] Método Feynman \n";
+        cout << "\n [3.] Método etiquetas \n";
+        cout << "\n [4.] Retroceder a inicio\n"; // Opción para retroceder
+        cin >> op;
 
-    switch (op) {
-        case 1: {
-            // Método Pomodoro
-            while (true) {
-                // Estudio durante 30 minutos
-                cout << "\n--- Iniciando 30 minutos de estudio ---\n";
-                for (int i = 30; i > 0; i--) {
-                    cout << "Tiempo restante para estudiar: " << i << " minutos." << endl;
-                    this_thread::sleep_for(chrono::minutes(1)); // Espera un minuto
-                }
-                cout << "\n¡Tiempo de estudio ha terminado! Es momento de descansar 10 minutos.\n";
+        switch (op) {
+            case 1: {
+                // Método Pomodoro
+                while (true) {
+                    // Estudio durante 30 minutos
+                    cout << "\n--- Iniciando 30 minutos de estudio ---\n";
+                    for (int i = 30; i > 0; i--) {
+                        cout << "Tiempo restante para estudiar: " << i << " minutos." << endl;
+                        this_thread::sleep_for(chrono::minutes(1)); // Espera un minuto
+                    }
+                    cout << "\n¡Tiempo de estudio ha terminado! Es momento de descansar 10 minutos.\n";
 
-                // Descanso durante 10 minutos
-                for (int i = 10; i > 0; i--) {
-                    cout << "Tiempo restante para descansar: " << i << " minutos." << endl;
-                    this_thread::sleep_for(chrono::minutes(1)); // Espera un minuto
+                    // Descanso durante 10 minutos
+                    for (int i = 10; i > 0; i--) {
+                        cout << "Tiempo restante para descansar: " << i << " minutos." << endl;
+                        this_thread::sleep_for(chrono::minutes(1)); // Espera un minuto
+                    }
+                    cout << "\n¡Descanso ha terminado! Regresando al estudio...\n";
+
+                    // Pregunta al usuario si desea continuar o volver al menú
+                    char continuar;
+                    cout << "¿Desea continuar estudiando? (s/n): ";
+                    cin >> continuar;
+                    if (continuar == 'n' || continuar == 'N') {
+                        break; // Sale del bucle de estudio y regresa al menú
+                    }
                 }
-                cout << "\n¡Descanso ha terminado! Regresando al estudio...\n";
+                break;
             }
-            break;
-        }
-        case 2: {
-            // Método Feynman
-            string concepto;
-            cout << "\nIngrese el concepto que quiere aprender utilizando el método Feynman: ";
-            cin.ignore(); // Limpiar el buffer
-            getline(cin, concepto); // Leer el concepto
+            case 2: {
+                // Método Feynman
+                string concepto;
+                cout << "\nIngrese el concepto que quiere aprender utilizando el método Feynman: ";
+                cin.ignore(); // Limpiar el buffer
+                getline(cin, concepto); // Leer el concepto
 
-            cout << "\n** Método Feynman para aprender: " << concepto << " **\n";
-            cout << "1. Explica el concepto con tus propias palabras.\n";
-            cout << "2. Enséñalo a alguien más (o a ti mismo en voz alta).\n";
-            cout << "3. Si te atascas, vuelve a la fuente y simplifica.\n";
-            cout << "4. Repite hasta que el concepto sea claro y puedas explicarlo fácilmente.\n";
-            break;
+                cout << "\n** Método Feynman para aprender: " << concepto << " **\n";
+                cout << "1. Explica el concepto con tus propias palabras.\n";
+                cout << "2. Enséñalo a alguien más (o a ti mismo en voz alta).\n";
+                cout << "3. Si te atascas, vuelve a la fuente y simplifica.\n";
+                cout << "4. Repite hasta que el concepto sea claro y puedas explicarlo fácilmente.\n";
+                break;
+            }
+            case 3: {
+                // Método de etiquetas
+                cout << "\nMétodo de estudio con etiquetas:\n";
+                cout << "Puedes asignar etiquetas a tus tareas para organizarlas mejor. Ejemplo:\n";
+                cout << "1. Importante\n";
+                cout << "2. Urgente\n";
+                cout << "3. A largo plazo\n";
+                // Aquí puedes agregar más funcionalidades para el método de etiquetas
+                break;
+            }
+            case 4: {
+                cout << "\nRetrocediendo a inicio...\n";
+                return; // Vuelve a la función main()
+            }
+            default:
+                cout << "\nOpción no válida, intenta de nuevo.\n";
+                break;
         }
-        case 3: {
-            // Método de etiquetas
-            cout << "\nMétodo de estudio con etiquetas:\n";
-            cout << "Puedes asignar etiquetas a tus tareas para organizarlas mejor. Ejemplo:\n";
-            cout << "1. Importante\n";
-            cout << "2. Urgente\n";
-            cout << "3. A largo plazo\n";
-            // Aquí puedes agregar más funcionalidades para el método de etiquetas
-            break;
-        }
-        default:
-            cout << "\nOpción no válida, intenta de nuevo.\n";
-            break;
     }
                   
 }
