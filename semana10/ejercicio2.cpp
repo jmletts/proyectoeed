@@ -13,14 +13,15 @@ nodo *pila = NULL;
 // Prototipos de las funciones
 void IngresarElementos(nodo *&, int);
 void mostrarPila(nodo *);
-bool buscarElemento(nodo *, int);
+void buscarElemento(nodo *, int);
 void eliminarElemento(nodo *&, int);
-void eliminarTodaLaPila(nodo *&);
+void eliminarTodaLaPila(nodo *&, int n);
 void contarParesImpares(nodo *, int &, int &);
 
 int main(int argc, char const *argv[])
 {
     int op, cant, n;
+
        do {
         cout << "------------------------\n";
         cout << "MENU DE PILAS\n";
@@ -37,13 +38,9 @@ int main(int argc, char const *argv[])
 
         switch (op) {
             case 1:
-                cout << "Ingrese cantidad de nodos: ";
-                cin >> cant;
-                for (int i = 1; i <= cant; i++) {
                     cout << "Ingrese un elemento: ";
                     cin >> n;
                     IngresarElementos(pila, n);
-                }
                 break;
 
             case 2:
@@ -57,8 +54,16 @@ int main(int argc, char const *argv[])
                 cin >> n;
                 buscarElemento(pila, n);
 
+            case 4:
+                while (pila != NULL)
+                {
+                   eliminarTodaLaPila(pila, n);
+                }
+                
+
        }
-       }
+       }while(op != 4);
+
     return 0;
 }
 
@@ -69,7 +74,8 @@ void IngresarElementos(nodo *&pila, int n) {
 
     if (pila == NULL)
     {
-        cout << "Pila Vacia";
+        aux->sig = NULL;
+        
     } else{
         aux->sig = pila;
         
@@ -98,9 +104,10 @@ void mostrarPila(nodo *pila){
     }
 }
 
-bool buscarElemento(nodo *pila, int n){
+void buscarElemento(nodo *pila, int n){
     nodo *actual = new nodo();
     actual = pila;
+    int posi;
     bool band = false;
 
     while (actual != NULL)  
@@ -110,11 +117,12 @@ bool buscarElemento(nodo *pila, int n){
             band = true;
         } 
         actual = actual->sig;
+        posi++;
     }
 
     if (band == true)
     {
-        cout << "Elemento"<<n<< " encontrado";
+        cout << "Elemento"<<n<< " encontrado , en " << posi;
     } else {
 
           cout << "Elemento"<<n<< " NO encontrado";
@@ -122,6 +130,16 @@ bool buscarElemento(nodo *pila, int n){
 }
 
 void eliminarElemento(nodo *&pila, int n){
+    nodo *aux = pila;
+    pila = aux->sig;
+    cout << "Elemento desapilado: " << aux->dato << endl;
+    delete(aux);
+}
 
+void eliminarTodaLaPila(nodo *&pila, int n){
 
+    nodo *aux = pila;
+    n = aux->dato;
+    pila = aux->sig;
+    delete aux;
 }
