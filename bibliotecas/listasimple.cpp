@@ -13,7 +13,8 @@ nodo *inicio = NULL;
 void insertarElemento(nodo *&inicio, int n);
 void eliminarElemento(nodo *&inicio, int n);
 void mostrarElementos(nodo *inicio);
-
+void buscarElemento(nodo *inicio, int n);
+void eliminarlista(nodo *&inicio);
 int main(int argc, char const *argv[])
 {
     
@@ -25,6 +26,15 @@ int main(int argc, char const *argv[])
 
     eliminarElemento(inicio, 2);
     mostrarElementos(inicio);
+
+    buscarElemento(inicio, 23);
+    buscarElemento(inicio, 234);
+
+    mostrarElementos(inicio);
+
+    eliminarlista(inicio);
+
+
 
     
 
@@ -79,6 +89,17 @@ void eliminarElemento(nodo *&inicio, int n)
     delete aux;
 }
 
+void eliminarlista(nodo *&inicio)
+{
+    int aux;
+    while (inicio != NULL)
+    {
+        eliminarElemento(inicio, aux);
+    }
+    
+
+}
+
 void mostrarElementos(nodo *inicio){
 
     nodo *aux = inicio;
@@ -93,3 +114,29 @@ void mostrarElementos(nodo *inicio){
     
 
 }
+
+
+void buscarElemento(nodo *inicio, int n) {
+    nodo *aux = inicio;
+    bool band = false;
+    int cont = 0;
+
+    while (aux != NULL)
+    {
+        if (aux->dato == n)
+        {
+            band = true;
+        }
+        cont ++;
+        aux = aux->sig;
+    }
+    
+    if (band == true)
+    {
+        cout << "Elemento: "<<n<<"Encontrado en la posicion "<<cont;
+    }
+    else {
+        cout << "Elemento: "<<n<<"NO encontrado";
+    }
+}
+
