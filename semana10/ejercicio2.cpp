@@ -1,145 +1,194 @@
 #include <iostream>
-#include <stdlib.h>
 
 using namespace std;
 
-struct nodo {
+struct nodo
+{
     int dato;
-    nodo *sig;
+    nodo *sgt;
 };
 
 nodo *pila = NULL;
 
-// Prototipos de las funciones
-void IngresarElementos(nodo *&, int);
-void mostrarPila(nodo *);
-void buscarElemento(nodo *, int);
-void eliminarElemento(nodo *&, int);
-void eliminarTodaLaPila(nodo *&, int n);
-void contarParesImpares(nodo *, int &, int &);
+void menu();
+void insertarElementos(nodo *&pila, int n);
+void mostrarElementos(nodo *pila);
+void BuscarElemento(nodo *pila, int n);
+void EliminarElemento(nodo *&pila);
+void EliminarTodo(nodo *&pila);
+void CantidadParesImpares(nodo *pila);
+void DisplayError () {cout << "Error Ingrese de nuevo"<<endl; }
+
 
 int main(int argc, char const *argv[])
 {
-    int op, cant, n;
-
-       do {
-        cout << "------------------------\n";
-        cout << "MENU DE PILAS\n";
-        cout << "------------------------\n";
-        cout << "1. Ingresar elementos a la pila\n";
-        cout << "2. Mostrar elementos de la pila\n";
-        cout << "3. Buscar elemento en la pila\n";
-        cout << "4. Eliminar elemento de la pila\n";
-        cout << "5. Eliminar toda la lista\n";
-        cout << "6. Cantidad de pares e impares de elementos de la pila\n";
-        cout << "7. Salir\n";
-        cout << "Seleccione una opción: ";
-        cin >> op;
-
-        switch (op) {
-            case 1:
-                    cout << "Ingrese un elemento: ";
-                    cin >> n;
-                    IngresarElementos(pila, n);
-                break;
-
-            case 2:
-                cout << "Elementos de la pila: ";
-                mostrarPila(pila);
-                cout << endl;
-                break;
-
-            case 3:
-                cout << "Ingrese el elemento a buscar: ";
-                cin >> n;
-                buscarElemento(pila, n);
-
-            case 4:
-                while (pila != NULL)
-                {
-                   eliminarTodaLaPila(pila, n);
-                }
-                
-
-       }
-       }while(op != 4);
-
+    menu();
     return 0;
 }
 
-void IngresarElementos(nodo *&pila, int n) {
-    nodo *aux = NULL;
-    aux = new(nodo);
-    aux->dato = n;
+void menu(){
+    int op;
+    int n;
+    do
+    {
+        cout << "\tMenu"<<endl;
+        cout << "[1] Ingresar Elementos a la pila" << endl;
+        cout << "[2] Mostrar elementos de la pila" << endl;
+        cout << "[3] Buscar un elemento en la pila" << endl;
+        cout << "[4] Elimininar elemento de la pila" << endl;
+        cout << "[5] Eliminar toda la pila" << endl;
+        cout << "[6] Cantidad de numeros pares e impares" << endl;
+        cout << "[7] Salir" << endl;
+        cout << "Elige una opcion: ";
+        cin >> op;
+
+        switch (op)
+        {
+        case 1:
+            cout << "Ingrese un valor: ";
+            cin >> n;
+            insertarElementos(pila, n);
+            
+            break;
+        
+        case 2:
+            mostrarElementos(pila);
+            
+            break;
+        
+        case 3:
+            cout << "Ingrese el elemento a buscar: ";
+            cin >> n;
+            BuscarElemento(pila, n);
+            
+            break;
+
+        case 4:
+            EliminarElemento(pila);
+            
+            break;
+
+        case 5:
+            EliminarTodo(pila);
+            cout << "Pila eliminada" <<endl;
+
+            break;
+
+        case 6:
+            CantidadParesImpares(pila);   
+            
+            break;
+        
+        default:
+            DisplayError();
+            break;
+        }
+        
+    } while (op != 7);
+    
+}
+
+void insertarElementos(nodo *&pila, int n)
+{
+
+    nodo *nuevoNodo = new nodo();
+    nuevoNodo->dato = n;
 
     if (pila == NULL)
     {
-        aux->sig = NULL;
-        
+        nuevoNodo->sgt = NULL;
     } else{
-        aux->sig = pila;
-        
+        nuevoNodo ->sgt = pila;
     }
-    pila = aux;
-    cout << "Elemento agregado.";
-
+    pila = nuevoNodo; // para que sea como escalera
 
 }
 
-void mostrarPila(nodo *pila){
+void mostrarElementos(nodo *pila)
+{
 
     nodo *aux = pila;
 
     if (pila == NULL)
     {
-       cout << "Pila Vacia";
-    } else {
-        while (aux != NULL)     
-        {
-           cout << aux->dato << endl;
-           aux = aux->sig;
-        }
-        
+        DisplayError ();
+        cout << "La pila esta vacia"<<endl;
 
+    } else {
+        while (aux != NULL)
+        {
+            cout << aux->dato << endl;
+            aux = aux->sgt;
+        }
     }
 }
 
-void buscarElemento(nodo *pila, int n){
-    nodo *actual = new nodo();
-    actual = pila;
-    int posi;
-    bool band = false;
+void BuscarElemento(nodo *pila, int n){
 
-    while (actual != NULL)  
+    nodo *actual = pila;
+    bool band = false;
+    int cont=0;
+
+    while (actual != NULL)
     {
         if (actual->dato == n)
         {
             band = true;
-        } 
-        actual = actual->sig;
-        posi++;
+            break;
+
+        }
+        
+        actual = actual->sgt;
+        cont++;
     }
 
     if (band == true)
     {
-        cout << "Elemento"<<n<< " encontrado , en " << posi;
-    } else {
+       cout << "Elemento "<<n<<" encontrado, en la posicion: "<<cont;
 
-          cout << "Elemento"<<n<< " NO encontrado";
+    }else {
+        cout << "Elemento "<<n<<" NO encontrado";
     }
 }
 
-void eliminarElemento(nodo *&pila, int n){
+void EliminarElemento(nodo *&pila){
+
     nodo *aux = pila;
-    pila = aux->sig;
-    cout << "Elemento desapilado: " << aux->dato << endl;
+    pila = aux->sgt;
+    cout << "Elemento eliminado";
     delete(aux);
 }
 
-void eliminarTodaLaPila(nodo *&pila, int n){
+void EliminarTodo(nodo *&pila) {
 
+    nodo *aux;
+
+    while (pila != NULL)
+    {
+        aux = pila;
+        pila = aux->sgt;
+        delete(aux);
+    }
+    
+}
+
+void CantidadParesImpares(nodo *pila){
     nodo *aux = pila;
-    n = aux->dato;
-    pila = aux->sig;
-    delete aux;
+    int contador[2] = {0};
+
+    while (aux != NULL)
+    {
+        if (aux->dato % 2 == 0)
+        {
+            contador[0]++;
+
+        } else{
+            contador[1]++;
+        }
+        aux = aux->sgt;   
+    }
+    
+    cout << "La cantidad de numeros pares es: "<<contador[0] <<endl;
+    cout << "La cantidad de numeros impares es: "<<contador[1] <<endl;
+
 }
